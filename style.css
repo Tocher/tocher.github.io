@@ -9,4 +9,58 @@ body
     font-family: arial,sans-serif;
     background-color: #292548;
     color: #fff;
+    height: 2000px;
+    position: relative;
+}
+
+header
+{
+    background: #fff;
+    height: 60px;
+    line-height: 60px;
+    color: #333;
+    transition: all 0.4s;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+.small
+{
+    height: 30px;
+    line-height: 30px;
+}
+
+.nav-menu
+{
+    list-style: none;
+}
+
+.nav-menu li
+{
+    float: left;
+    padding: 0 10px;
+}
+
+.info
+{
+    width: 720px;
+    margin: 160px auto 0;
+}
+
+.info h1,
+.info h2
+{
+    text-align: center;
+}
+
+footer
+{
+    position: absolute;
+    bottom: 0;
+    background: #ccc;
+    color: #333;
+    height: 25px;
+    text-align: center;
+    width: 100%;
 }

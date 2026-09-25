@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Paver Plaza Privacy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Onest:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --ground: #eef0ef;
+    --paper: #fbfcfb;
+    --ink: #1e2624;
+    --muted: #5b6763;
+    --line: #d5dbd8;
+    --stone-a: #6f9a8d;
+    --stone-b: #c9a86a;
+    --stone-c: #b8c3bf;
+    --accent: #3f7466;
+    --accent-ink: #ffffff;
+    --chip: #e2e8e5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --ground: #151a19;
+      --paper: #1c2221;
+      --ink: #e6ebe9;
+      --muted: #9aa7a2;
+      --line: #2f3836;
+      --stone-a: #5f8a7e;
+      --stone-b: #a88c56;
+      --stone-c: #56615d;
+      --accent: #8cc4b3;
+      --accent-ink: #10201b;
+      --chip: #26302d;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --ground: #151a19;
+    --paper: #1c2221;
+    --ink: #e6ebe9;
+    --muted: #9aa7a2;
+    --line: #2f3836;
+    --stone-a: #5f8a7e;
+    --stone-b: #a88c56;
+    --stone-c: #56615d;
+    --accent: #8cc4b3;
+    --accent-ink: #10201b;
+    --chip: #26302d;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font: 16px/1.6 "Onest", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    padding-inline: 16px;
+    padding-block: 40px 56px;
+  }
+  .sheet {
+    max-width: 720px;
+    margin: 0 auto;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: clamp(24px, 5vw, 48px);
+    display: grid;
+    gap: 32px;
+  }
+
+  header { display: grid; gap: 20px; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .stones { display: grid; grid-template-columns: repeat(3, 14px); grid-template-rows: repeat(2, 14px); gap: 3px; }
+  .stones i { display: block; border-radius: 2px; background: var(--stone-c); }
+  .stones i:nth-child(1), .stones i:nth-child(5) { background: var(--stone-a); }
+  .stones i:nth-child(3) { background: var(--stone-b); }
+
+  .lang { display: inline-flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+  .lang button {
+    font: 600 13px/1 "Onest", system-ui, sans-serif;
+    letter-spacing: .04em;
+    padding: 8px 14px;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .lang button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+  .lang button:focus-visible, .copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  h1 {
+    font: 700 clamp(26px, 5vw, 36px)/1.15 "Unbounded", "Onest", system-ui, sans-serif;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .meta li {
+    background: var(--chip);
+    border-radius: 3px;
+    padding: 4px 10px;
+    font-size: 13px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .meta b { color: var(--ink); font-weight: 600; }
+
+  .lead { font-size: 18px; margin: 0; max-width: 62ch; }
+
+  section { display: grid; gap: 10px; }
+  h2 {
+    font: 500 17px/1.3 "Unbounded", "Onest", system-ui, sans-serif;
+    margin: 0;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    text-wrap: balance;
+  }
+  p, ul { margin: 0; max-width: 65ch; }
+  ul { padding-left: 1.2em; display: grid; gap: 6px; }
+  code {
+    font: 14px/1.4 ui-monospace, "Cascadia Mono", Consolas, monospace;
+    background: var(--chip);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  .table { overflow-x: auto; }
+  th, td { text-align: left; padding: 9px 12px 9px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-weight: 600; color: var(--muted); font-size: 13px; letter-spacing: .04em; text-transform: uppercase; }
+  tr:last-child td { border-bottom: 0; }
+
+  .contact { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .mail { font-weight: 600; font-size: 17px; user-select: all; }
+  .copy {
+    font: 500 13px/1 "Onest", system-ui, sans-serif;
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  footer { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); padding-top: 18px; }
+
+  [data-lang] { display: none; }
+  html[lang="ru"] [data-lang="ru"], html[lang="en"] [data-lang="en"] { display: grid; gap: 32px; }
+</style>
+</head>
+<body>
+
+<main class="sheet">
+  <header>
+    <div class="top">
+      <div class="stones" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" id="btn-ru" data-set="ru">RU</button>
+        <button type="button" id="btn-en" data-set="en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== RUSSIAN ===================== -->
+  <div data-lang="ru">
+    <header>
+      <h1>Политика конфиденциальности Paver Plaza</h1>
+      <ul class="meta">
+        <li>Разработчик: <b>IFGames</b></li>
+        <li>Пакет: <b>com.ifgames.paverplaza</b></li>
+        <li>Действует с <b>25.09.2026</b></li>
+      </ul>
+    </header>
+
+    <p class="lead">Paver Plaza — офлайн-игра про мощение городских улиц. Игра не собирает,
+      не передаёт и не продаёт персональные данные. У неё нет аккаунтов, рекламы и аналитики,
+      и она не выходит в интернет.</p>
+
+    <section>
+      <h2>Какие данные собираются</h2>
+      <p>Никакие. Игра не запрашивает имя, почту, телефон, местоположение, контакты, фото,
+        идентификаторы устройства или рекламы. Мы не видим, кто и как играет.</p>
+    </section>
+
+    <section>
+      <h2>Что хранится на устройстве</h2>
+      <p>Чтобы игра продолжалась с того же места, на вашем телефоне сохраняются:</p>
+      <ul>
+        <li>прогресс: номер города, уложенные кварталы, опыт и таланты мастера;</li>
+        <li>настройки: язык, звук и вибрация.</li>
+      </ul>
+      <p>Эти данные не покидают устройство. Они удаляются вместе с игрой или при очистке её
+        данных в настройках Android.</p>
+    </section>
+
+    <section>
+      <h2>Разрешения</h2>
+      <div class="table">
+        <table>
+          <thead><tr><th>Разрешение</th><th>Зачем</th></tr></thead>
+          <tbody>
+            <tr><td><code>VIBRATE</code></td><td>Лёгкий отклик, когда вы берёте и кладёте камень. Отключается в настройках игры.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Других разрешений игра не запрашивает, в том числе доступа к интернету.</p>
+    </section>
+
+    <section>
+      <h2>Третьи стороны</h2>
+      <p>В игре нет сторонних SDK для рекламы, аналитики или сбора сбоев, и мы никому не
+        передаём данные. Игру вы скачиваете через Google Play: Google обрабатывает данные
+        об установке и покупках по своей
+        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">политике конфиденциальности</a>.</p>
+    </section>
+
+    <section>
+      <h2>Дети</h2>
+      <p>Игра подходит для любого возраста. Поскольку мы не собираем данные ни у кого, мы не
+        собираем их и у детей.</p>
+    </section>
+
+    <section>
+      <h2>Изменения</h2>
+      <p>Если в игре появится что-то, что затрагивает данные (например, реклама или облачные
+        сохранения), мы обновим эту страницу до выхода такой версии и изменим дату вверху.</p>
+    </section>
+
+    <section>
+      <h2>Связь</h2>
+      <p>Вопросы о конфиденциальности присылайте на почту:</p>
+      <div class="contact">
+        <span class="mail">tocher99@gmail.com</span>
+        <button type="button" class="copy" id="copy-ru">Скопировать</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===================== ENGLISH ===================== -->
+  <div data-lang="en">
+    <header>
+      <h1>Paver Plaza Privacy Policy</h1>
+      <ul class="meta">
+        <li>Developer: <b>IFGames</b></li>
+        <li>Package: <b>com.ifgames.paverplaza</b></li>
+        <li>Effective <b>25 September 2026</b></li>
+      </ul>
+    </header>
+
+    <p class="lead">Paver Plaza is an offline game about paving town streets. It does not
+      collect, share or sell personal data. It has no accounts, no ads and no analytics, and
+      it does not connect to the internet.</p>
+
+    <section>
+      <h2>Data we collect</h2>
+      <p>None. The game does not ask for your name, email, phone number, location, contacts,
+        photos, device identifiers or advertising ID. We cannot see who plays or how.</p>
+    </section>
+
+    <section>
+      <h2>What stays on your device</h2>
+      <p>So you can pick up where you left off, the game saves on your phone:</p>
+      <ul>
+        <li>your progress: the town you are in, finished quarters, the builder's experience and talents;</li>
+        <li>your settings: language, sound and vibration.</li>
+      </ul>
+      <p>This data never leaves the device. It is removed when you uninstall the game or clear
+        its data in Android settings.</p>
+    </section>
+
+    <section>
+      <h2>Permissions</h2>
+      <div class="table">
+        <table>
+          <thead><tr><th>Permission</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td><code>VIBRATE</code></td><td>A light buzz when you pick up and lay a stone. You can turn it off in the game's settings.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The game asks for no other permissions, including internet access.</p>
+    </section>
+
+    <section>
+      <h2>Third parties</h2>
+      <p>The game contains no third-party SDKs for ads, analytics or crash reporting, and we
+        share no data with anyone. You download the game from Google Play, and Google handles
+        install and purchase data under its own
+        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">privacy policy</a>.</p>
+    </section>
+
+    <section>
+      <h2>Children</h2>
+      <p>The game is suitable for all ages. Since we collect no data from anyone, we collect
+        none from children either.</p>
+    </section>
+
+    <section>
+      <h2>Changes</h2>
+      <p>If the game ever adds something that involves data, such as ads or cloud saves, we will
+        update this page before that version ships and change the date above.</p>
+    </section>
+
+    <section>
+      <h2>Contact</h2>
+      <p>Send privacy questions to:</p>
+      <div class="contact">
+        <span class="mail">tocher99@gmail.com</span>
+        <button type="button" class="copy" id="copy-en">Copy</button>
+      </div>
+    </section>
+  </div>
+
+  <footer>© 2026 IFGames · Paver Plaza</footer>
+</main>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    function set(lang) {
+      root.lang = lang;
+      document.getElementById('btn-ru').setAttribute('aria-pressed', lang === 'ru');
+      document.getElementById('btn-en').setAttribute('aria-pressed', lang === 'en');
+      document.title = lang === 'ru' ? 'Paver Plaza — конфиденциальность' : 'Paver Plaza Privacy';
+    }
+    var hash = (location.hash || '').replace('#', '');
+    var nav = (navigator.language || 'en').slice(0, 2).toLowerCase();
+    set(hash === 'ru' || hash === 'en' ? hash : (['ru', 'uk', 'be'].indexOf(nav) >= 0 ? 'ru' : 'en'));
+
+    document.querySelectorAll('[data-set]').forEach(function (b) {
+      b.addEventListener('click', function () { set(b.getAttribute('data-set')); });
+    });
+    document.querySelectorAll('.copy').forEach(function (b) {
+      var label = b.textContent;
+      b.addEventListener('click', function () {
+        var mail = 'tocher99@gmail.com';
+        var done = function () {
+          b.textContent = root.lang === 'ru' ? 'Скопировано' : 'Copied';
+          setTimeout(function () { b.textContent = label; }, 1600);
+        };
+        var select = function () {
+          var r = document.createRange();
+          r.selectNodeContents(b.previousElementSibling);
+          var s = getSelection(); s.removeAllRanges(); s.addRange(r);
+        };
+        try {
+          navigator.clipboard.writeText(mail).then(done, select);
+        } catch (e) { select(); }
+      });
+    });
+  })();
+</script>
+</body>
+</html>
